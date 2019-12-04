@@ -7,7 +7,7 @@
 <script type="text/javascript">
 window.onload = function(){
    var ymap = new Y.Map("map");
-   ymap.drawMap(new Y.LatLng(35.9114, 139.950516), 13, Y.LayerSetId.NORMAL);
+   var style = new Y.Style("00ff00", 8, 0.5);
    var latlngs = [
    new Y.LatLng(35.88427,139.96965),
    new Y.LatLng(35.884254,139.969635),
@@ -938,9 +938,10 @@ window.onload = function(){
    new Y.LatLng(35.927429,139.948959),
    new Y.LatLng(35.927429,139.948959)
       ];
-var polyline = new Y.Polyline(latlngs);
+var polyline = new Y.Polyline(latlngs, {strokeStyle: style});
 ymap.addFeature(polyline);
-   
+      ymap.drawMap(new Y.LatLng(35.9114, 139.950516), 13, Y.LayerSetId.NORMAL);
+
 }
 
 </script>
