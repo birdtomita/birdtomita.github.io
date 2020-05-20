@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 <body>
+    <p id="debugArea">ready</p>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
 
@@ -28,8 +29,8 @@ var audioStart = function(){
     // Setup options
     var options = {
      source: source,
-     voice_stop: function() {console.log('voice_stop');}, 
-     voice_start: function() {console.log('voice_start');}
+     voice_stop: function() {console.log('voice_stop');document.getElementById('debugArea').innerHTML = 'stop'; }, 
+     voice_start: function() {console.log('voice_start'); document.getElementById('debugArea').innerHTML = 'start';}
     }; 
     
     // Create VAD
