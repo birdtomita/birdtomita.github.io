@@ -11,6 +11,11 @@
 
 var audioStart = function(){
 
+    if (!navigator || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+       alert('Missing support for navigator.mediaDevices.getUserMedia') // temp: helps when testing for strange issues on ios/safari
+       return
+     }
+  
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var audioContext = new AudioContext();
@@ -32,10 +37,10 @@ var audioStart = function(){
   }
 
   // Ask for audio device
-  navigator.getUserMedia = navigator.getUserMedia || 
+  navigator.mediaDevices.getUserMedia = navigator.getUserMedia || 
                            navigator.mozGetUserMedia || 
                            navigator.webkitGetUserMedia;
-  navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+  navigator.mediaDevices.getUserMedia({audio: true}, startUserMedia, function(e) {
           console.log("No live audio input in this browser: " + e);
   });
 }
