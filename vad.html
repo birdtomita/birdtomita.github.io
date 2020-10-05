@@ -49,8 +49,8 @@ const stopfunc = function() {
 
 
 document.getElementById("resume").onclick = function(){
-  if (getAudioContext().state !== 'running') {
-    getAudioContext().resume();
+  if (audioContext.state !== 'running') {
+    audioContext.resume();
   }
 }
 
