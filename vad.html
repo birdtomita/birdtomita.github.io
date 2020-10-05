@@ -7,8 +7,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 <body>
-    <p id="debugArea">ready</p>
-    <p id="devices"></p>
+  <h3>devices</h3>
+  <p id="devices"></p>
+  <h3>Results</h3>
+  <p id="debugArea">ready</p>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
     
@@ -27,12 +29,18 @@
  console.error('enumerateDevide ERROR:', err);
 });
 
-var audioStart = function(){
-
-    if (!navigator || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-       alert('Missing support for navigator.mediaDevices.getUserMedia') // temp: helps when testing for strange issues on ios/safari
-       return
-     }
+const startfunc = function() {
+  console.log('start');
+  const t = document.createElement("div");
+  div.innerHTML = "start";
+  document.getElementById('debugArea').appendChild(t);
+};
+const stopfunc = function() {
+  console.log('start');
+  const t = document.createElement("div");
+  div.innerHTML = "start";
+  document.getElementById('debugArea').appendChild(t);
+};
   
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -46,8 +54,8 @@ var audioStart = function(){
     // Setup options
     var options = {
      source: source,
-     voice_stop: function() {console.log('voice_stop');document.getElementById('debugArea').innerHTML = 'stop'; }, 
-     voice_start: function() {console.log('voice_start'); document.getElementById('debugArea').innerHTML = 'start';}
+     voice_stop: stopfunc, 
+     voice_start: startfunc
     }; 
     
     // Create VAD
@@ -61,9 +69,7 @@ var audioStart = function(){
   navigator.mediaDevices.getUserMedia({audio: true}, startUserMedia, function(e) {
           console.log("No live audio input in this browser: " + e);
   });
-}
 
 </script>
-<button onClick="audioStart()">test</button>
 </body>
 </html>
