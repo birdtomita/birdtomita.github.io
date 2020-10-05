@@ -7,14 +7,18 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 <body>
+  <h1>test</h1>
   <h3>devices</h3>
   <p id="devices"></p>
   <h3>Results</h3>
   <p id="debugArea">ready</p>
   <button id="resume">resume</button>
+  <script>
+      alert("script start:0");
+
+  </script>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
-    
     const p = document.getElementById("devices");
     
     navigator.mediaDevices.enumerateDevices()
@@ -42,23 +46,36 @@ const stopfunc = function() {
   t.innerHTML = "start";
   document.getElementById('debugArea').appendChild(t);
 };
-  
+
+
+document.getElementById("resume").onclick = function(){
+  // if (audioContext.state !== 'running') {
+  //   audioContext.resume().then(() => {
+  //   console.log('Playback resumed successfully');
+  // });
+  // }
+
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var audioContext = new AudioContext();
 
 
-document.getElementById("resume").onclick = function(){
-  if (audioContext.state !== 'running') {
-    audioContext.resume().then(() => {
-    console.log('Playback resumed successfully');
+    // Ask for audio device
+    navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.getUserMedia || 
+                           navigator.mozGetUserMedia || 
+                           navigator.webkitGetUserMedia ;
+  audioContext.resume();
+  navigator.mediaDevices.getUserMedia({audio: true}, startUserMedia, function(e) {
+          console.log("No live audio input in this browser: " + e);
   });
-  }
+  console.log("state:"+audioContext.state);
+
 }
 
   // Define function called by getUserMedia 
   function startUserMedia(stream) {
     // Create MediaStreamAudioSourceNode
+    console.log("startUserMedia " + stream);
     var source = audioContext.createMediaStreamSource(stream);
 
     // Setup options
@@ -70,8 +87,6 @@ document.getElementById("resume").onclick = function(){
     
     // Create VAD
     var vad = new VAD(options);
-    vad.onMonitor
-
     if (vad) {
       const d = document.createElement("div");
       d.innerHTML = "vad init";
@@ -83,14 +98,6 @@ document.getElementById("resume").onclick = function(){
     }
 
   }
-
-  // Ask for audio device
-  navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.getUserMedia || 
-                           navigator.mozGetUserMedia || 
-                           navigator.webkitGetUserMedia ;
-  navigator.mediaDevices.getUserMedia({audio: true}, startUserMedia, function(e) {
-          console.log("No live audio input in this browser: " + e);
-  });
 
 </script>
 </body>
