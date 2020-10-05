@@ -8,8 +8,24 @@
 </head>
 <body>
     <p id="debugArea">ready</p>
+    <p id="devices"></p>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
+    
+    const devices = document.getElementByID("devices");
+    
+    navigator.mediaDevices.enumerateDevices()
+.then(function(devices) { // 成功時
+ devices.forEach(function(device) {
+     const d = document.createElement("div");
+     d.innerHTML = JSON.stringify(device);
+     p.appendChild(d);
+  // デバイスごとの処理
+ });
+})
+.catch(function(err) { // エラー発生時
+ console.error('enumerateDevide ERROR:', err);
+});
 
 var audioStart = function(){
 
