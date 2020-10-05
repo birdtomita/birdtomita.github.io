@@ -4,101 +4,71 @@
 <meta charset="utf-8" />
 <title>VAD Test</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
 </head>
 <body>
-  <h1>test</h1>
-  <h3>devices</h3>
-  <p id="devices"></p>
-  <h3>Results</h3>
-  <p id="debugArea">ready</p>
-  <button id="resume">resume</button>
-  <script>
-      alert("script start:0");
-
-  </script>
+  <button onclick="startrec()">start</button>
+    <div id="debug"></div>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
-    const p = document.getElementById("devices");
-    
-    navigator.mediaDevices.enumerateDevices()
-.then(function(devices) { // 成功時
- devices.forEach(function(device) {
-     const d = document.createElement("div");
-     d.innerHTML = JSON.stringify(device);
-     p.appendChild(d);
-  // デバイスごとの処理
- });
-})
-.catch(function(err) { // エラー発生時
- console.error('enumerateDevide ERROR:', err);
-});
-
-const startfunc = function() {
-  console.log('start');
-  const t = document.createElement("div");
-  t.innerHTML = "start";
-  document.getElementById('debugArea').appendChild(t);
-};
-const stopfunc = function() {
-  console.log('start');
-  const t = document.createElement("div");
-  t.innerHTML = "start";
-  document.getElementById('debugArea').appendChild(t);
-};
-
-
-document.getElementById("resume").onclick = function(){
-  // if (audioContext.state !== 'running') {
-  //   audioContext.resume().then(() => {
-  //   console.log('Playback resumed successfully');
-  // });
-  // }
-
+function startrec() {
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var audioContext = new AudioContext();
-
-
-    // Ask for audio device
-    navigator.mediaDevices.getUserMedia = navigator.mediaDevices.getUserMedia || navigator.getUserMedia || 
-                           navigator.mozGetUserMedia || 
-                           navigator.webkitGetUserMedia ;
-  audioContext.resume();
-  navigator.mediaDevices.getUserMedia({audio: true}, startUserMedia, function(e) {
-          console.log("No live audio input in this browser: " + e);
-  });
-  console.log("state:"+audioContext.state);
-
-}
+    const debugDiv = document.getElementById("debug");
 
   // Define function called by getUserMedia 
   function startUserMedia(stream) {
     // Create MediaStreamAudioSourceNode
-    console.log("startUserMedia " + stream);
     var source = audioContext.createMediaStreamSource(stream);
 
     // Setup options
     var options = {
      source: source,
-     voice_stop: stopfunc, 
-     voice_start: startfunc
+     voice_stop: function() {console.log('voice_stop');
+                             let d = document.createElement("div");
+                             const date = new Date();
+                             d.innerHTML = date + ": stop";
+                             debugDiv.appendChild(d);
+                            }, 
+     voice_start: function() {console.log('voice_start');
+                             const date = new Date();
+                             let d = document.createElement("div");
+                             const date = new Date();
+                             d.innerHTML = date + ": start";
+                             debugDiv.appendChild(d);
+                             }
     }; 
     
     // Create VAD
     var vad = new VAD(options);
-    if (vad) {
-      const d = document.createElement("div");
-      d.innerHTML = "vad init";
-      document.getElementById('debugArea').appendChild(d);
-    } else {
-      const d = document.createElement("div");
-      d.innerHTML = "vad not defined";
-      document.getElementById('debugArea').appendChild(d);
-    }
-
   }
 
+
+  navigator.mediaDevices = navigator.mediaDevices || ((navigator.mozGetUserMedia || navigator.webkitGetUserMedia) ? {
+   getUserMedia: function(c) {
+     return new Promise(function(y, n) {
+       (navigator.mozGetUserMedia ||
+        navigator.webkitGetUserMedia).call(navigator, c, y, n);
+     });
+   }
+} : null);
+
+if (!navigator.mediaDevices) {
+  console.log("getUserMedia() not supported.");
+  return;
+}
+
+// Prefer camera resolution nearest to 1280x720.
+
+var constraints = { audio: true, video: false };
+navigator.mediaDevices.getUserMedia(constraints)
+.then(function(stream) {
+  startUserMedia(stream);
+})
+.catch(function(err) {
+  console.log(err.name + ": " + err.message);
+});
+}
 </script>
 </body>
 </html>
