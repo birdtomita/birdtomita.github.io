@@ -11,6 +11,7 @@
   <p id="devices"></p>
   <h3>Results</h3>
   <p id="debugArea">ready</p>
+  <button id="resume">resume</button>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
     
@@ -32,19 +33,26 @@
 const startfunc = function() {
   console.log('start');
   const t = document.createElement("div");
-  div.innerHTML = "start";
+  t.innerHTML = "start";
   document.getElementById('debugArea').appendChild(t);
 };
 const stopfunc = function() {
   console.log('start');
   const t = document.createElement("div");
-  div.innerHTML = "start";
+  t.innerHTML = "start";
   document.getElementById('debugArea').appendChild(t);
 };
   
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var audioContext = new AudioContext();
+
+
+document.getElementById("resume").onclick = function(){
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
 
   // Define function called by getUserMedia 
   function startUserMedia(stream) {
@@ -60,6 +68,18 @@ const stopfunc = function() {
     
     // Create VAD
     var vad = new VAD(options);
+    vad.onMonitor
+
+    if (vad) {
+      const d = document.createElement("div");
+      d.innerHTML = "vad init";
+      document.getElementById('debugArea').appendChild(d);
+    } else {
+      const d = document.createElement("div");
+      d.innerHTML = "vad not defined";
+      document.getElementById('debugArea').appendChild(d);
+    }
+
   }
 
   // Ask for audio device
