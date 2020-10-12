@@ -11,15 +11,47 @@
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
 function startrec() {
+    const debugDiv = document.getElementById("debug");
+  
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+  console.log("enumerateDevices() not supported.");
+  return;
+}
+
+// カメラとマイクを一覧にする。
+
+navigator.mediaDevices.enumerateDevices()
+.then(function(devices) {
+  devices.forEach(function(device) {
+    console.log(device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+    
+                                 let d = document.createElement("div");
+                             d.innerHTML = device.kind + ": " + device.label +
+                " id = " + device.deviceId);
+                             debugDiv.appendChild(d);
+
+  });
+})
+.catch(function(err) {
+  console.log(err.name + ": " + error.message);
+});
+  
+  
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var audioContext = new AudioContext();
-    const debugDiv = document.getElementById("debug");
 
   // Define function called by getUserMedia 
   function startUserMedia(stream) {
     // Create MediaStreamAudioSourceNode
     var source = audioContext.createMediaStreamSource(stream);
+    
+    var samplingrate = source.context.sampleRate;
+    console.log("samplingRate = "+samplingrate);
+                             let d = document.createElement("div");
+                             d.innerHTML = "samplingRate = "+samplingrate;
+                             debugDiv.appendChild(d);
 
     // Setup options
     var options = {
