@@ -9,6 +9,7 @@
 </head>
 <body>
   <button onclick="startrec()">start</button>
+  <div id="log"></div>
     <div id="debug"></div>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
@@ -64,6 +65,11 @@ function startrec() {
     // Create VAD
     var vad = new VAD(options);
     vad.logging = true;
+    const logdiv = document.getElementById("log");
+    vad.log = function(msg){
+      const date = new Date();
+      logdiv.innerHTML = date + ":" + msg;
+    }
 
   if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
   console.log("enumerateDevices() not supported.");
