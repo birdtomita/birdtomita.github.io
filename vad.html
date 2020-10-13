@@ -9,28 +9,40 @@
 </head>
 <body>
   <button onclick="startrec()">start</button>
-  <button onclick="checkaudio()">Check Audio</button>
     <div id="debug"></div>
 <script type="text/javascript" src="lib/vad.js"></script>
 <script type="text/javascript">
 function startrec() {
     const debugDiv = document.getElementById("debug");
-  
-  
+
   // Create AudioContext
   window.AudioContext = window.AudioContext || window.webkitAudioContext;
   var audioContext = new AudioContext();
+
+  navigator.mediaDevices = navigator.mediaDevices || ((navigator.mozGetUserMedia || navigator.webkitGetUserMedia) ? {
+    getUserMedia: function(c) {
+      return new Promise(function(y, n) {
+        (navigator.mozGetUserMedia ||
+         navigator.webkitGetUserMedia).call(navigator, c, y, n);
+      });
+    }
+ } : null);
+
+ if (!navigator.mediaDevices) {
+   console.log("getUserMedia() not supported.");
+ }
+
+ var constraints = { audio: true, video: false };
+ navigator.mediaDevices.getUserMedia(constraints)
+ .then(function(stream) {
+
+   startUserMedia(stream);
+ });
 
   // Define function called by getUserMedia 
   function startUserMedia(stream) {
     // Create MediaStreamAudioSourceNode
     var source = audioContext.createMediaStreamSource(stream);
-    
-    var samplingrate = source.context.sampleRate;
-    console.log("samplingRate = "+samplingrate);
-                             let d = document.createElement("div");
-                             d.innerHTML = "samplingRate = "+samplingrate;
-                             debugDiv.appendChild(d);
 
     // Setup options
     var options = {
@@ -52,37 +64,41 @@ function startrec() {
     // Create VAD
     var vad = new VAD(options);
     vad.logging = true;
-  }
 
-}
   
-  function checkaudio(){
-  
+    var samplingrate = vad.options.context.sampleRate;
+    console.log("samplingRate = "+samplingrate);
+                             let d = document.createElement("div");
+                             d.innerHTML = "samplingRate = "+samplingrate;
+                             debugDiv.appendChild(d);
+
   if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
   console.log("enumerateDevices() not supported.");
   return;
-}
+  }
 
 // カメラとマイクを一覧にする。
 
 navigator.mediaDevices.enumerateDevices()
-.then(function(devices) {
-  devices.forEach(function(device) {
-    console.log(device.kind + ": " + device.label +
-                " id = " + device.deviceId);
-    
-                                 let d = document.createElement("div");
-                             d.innerHTML = device.kind + ": " + device.label +
-                " id = " + device.deviceId;
-                             debugDiv.appendChild(d);
-
+  .then(function(devices) {
+    devices.forEach(function(device) {
+      console.log(device.kind + ": " + device.label +
+                  " id = " + device.deviceId);
+      
+                                  let d = document.createElement("div");
+                              d.innerHTML = device.kind + ": " + device.label +
+                  " id = " + device.deviceId;
+                              debugDiv.appendChild(d);
+    });
+  })
+  .catch(function(err) {
+    console.log(err.name + ": " + error.message);
   });
-})
-.catch(function(err) {
-  console.log(err.name + ": " + error.message);
-});
+
 
   }
+
+}
   
 </script>
 </body>
