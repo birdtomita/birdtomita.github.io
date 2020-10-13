@@ -65,13 +65,6 @@ function startrec() {
     var vad = new VAD(options);
     vad.logging = true;
 
-  
-    var samplingrate = vad.options.context.sampleRate;
-    console.log("samplingRate = "+samplingrate);
-                             let d = document.createElement("div");
-                             d.innerHTML = "samplingRate = "+samplingrate;
-                             debugDiv.appendChild(d);
-
   if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
   console.log("enumerateDevices() not supported.");
   return;
@@ -95,6 +88,14 @@ navigator.mediaDevices.enumerateDevices()
     console.log(err.name + ": " + error.message);
   });
 
+  window.setTimeout(function(){
+    var samplingrate = vad.options.context.sampleRate;
+    console.log("samplingRate = "+samplingrate);
+                             let d = document.createElement("div");
+                             d.innerHTML = "samplingRate = "+samplingrate;
+                             debugDiv.appendChild(d);
+
+  },5);
 
   }
 
