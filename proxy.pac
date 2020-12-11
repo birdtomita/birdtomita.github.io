@@ -6,7 +6,7 @@ function FindProxyForURL(url, host) {
         return "SOCKS 192.168.0.35:4242";
     }
     if (isInNet(host, "192.168.52.0", "255.255.255.0")) {
-        return "PROXY 192.168.52.4:3128";
+        return "PROXY 192.168.0.250:3128";
     }
 return "DIRECT"
 
